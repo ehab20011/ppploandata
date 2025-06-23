@@ -4,6 +4,9 @@ set -e
 
 echo "🚀 Starting PPP Loan Data processing on Railway..."
 
+# Copy Railway config to standard location
+cp config.railway.conf config.conf
+
 # Test S3 connection first
 echo "🔍 Testing S3 connection..."
 python s3_connection.py
@@ -32,14 +35,14 @@ sleep 15
 
 # Run the data processing pipeline
 echo "🔄 Starting PPP loan data processing pipeline..."
-python run.py
+python run.py --runner=DirectRunner --save_main_session --pickle_library cloudpickle
 
 if [ $? -ne 0 ]; then
-    echo "❌ Error: Pipeline execution failed"
+    echo "❌ Error: Data processing pipeline failed"
     exit 1
 fi
 
-echo "✅ Pipeline execution completed!"
+echo "✅ Data processing completed successfully!"
 
 # Wait for Postgres to be ready for FastAPI
 DB_CHECK_CMD="import psycopg2; psycopg2.connect(dbname='${DB_NAME}', user='${DB_USER}', password='${DB_PASSWORD}', host='${DB_HOST}', port='${DB_PORT}')"
