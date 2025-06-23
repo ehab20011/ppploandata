@@ -1,7 +1,7 @@
 services:
   ppp-data-processor:
     build: .
-    container_name: ppp-loan-data-processor
+    container_name: ppp-loan-data-processor-dev
     volumes:
       - ./ppp_csvs:/app/ppp_csvs
       - .:/app
@@ -21,7 +21,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - "8001:8001"
+      - "8002:8001"
     entrypoint: ["./entrypoint.sh"]
     tty: true
     stdin_open: true
@@ -29,9 +29,9 @@ services:
 
   frontend:
     image: nginx:alpine
-    container_name: ppp-frontend
+    container_name: ppp-frontend-dev
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./frontend:/usr/share/nginx/html
     depends_on:
@@ -40,14 +40,14 @@ services:
 
   postgres:
     image: postgres:15
-    container_name: ppp-postgres
+    container_name: ppp-postgres-dev
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5434:5432"
+      - "5435:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
