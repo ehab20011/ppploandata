@@ -1,0 +1,21 @@
+Run these CURL commands once the API app is live to test the Endpoints [This is assuming the app is on PORT 8001]
+
+brew install jq (for readability)
+
+curl -s http://localhost:8001/health | jq
+expected: {"status": "ok"}
+
+curl -s http://localhost:8001/loans | jq
+expected: 10 loans in JSON format
+
+curl -s "http://localhost:8001/loans/search/by-borrower?borrower_name=DELTA%20LEASING%20LLC" | jq
+expected: loans from businesses where the name is like "DELTA LEASING LLC"
+
+curl -s "http://localhost:8001/loans/search/by-loan-number?loan_number=4415477104" | jq
+expected: JSON format response with details about the loan with number 4415477104
+
+curl -s "http://localhost:8001/loans/search/by-date-range?start_date=2020-05-01&end_date=2020-05-02" | jq
+expected: returned is all the ppp loans borrowed from may 1st 2020 to may 2nd 2020 
+
+curl -s "http://localhost:8001/loans/search/by-forgiveness-amount?min_forgiveness_amount=5000" | jq
+expected: returns 10 loans with the forgiveness amount equal to 5000 or greater
